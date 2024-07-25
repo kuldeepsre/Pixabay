@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:clean_tdd_architecture/Feature/presentation/bloc/deshboard/dashboard_bloc.dart';
 import 'package:clean_tdd_architecture/Feature/presentation/bloc/signup/signup_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -20,9 +21,23 @@ import 'injectable.dart';
 import 'package:http/http.dart' as http;
 import '../AppLocalizations.dart';
 import '../bloc/them/ThemeCubit.dart';
+import 'notification/firebaseApi.dart';
+final navigatorKey = GlobalKey<NavigatorState>();
+Future<void> main() async {
+  configureDependencies();
 
-void main() {
-  configureDependencies(); // Initialize your dependency injection
+  // Initialize your dependency injection
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        appId: "1:1019741035758:android:238cea16b600e3e7f367ff",
+        messagingSenderId: "1019741035758	",
+        projectId: "matrimonynotifications",
+        apiKey: "AIzaSyB8IcTgDxSVHhcvcn2xlgYujiSxcEZ4130",
+      ));
+
+  await FirebaseApi().initNotification();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
