@@ -2,7 +2,6 @@ import 'package:clean_tdd_architecture/Feature/presentation/components/slider_ca
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../utils/app_values.dart';
 import '../../../utils/colors.dart';
@@ -79,10 +78,11 @@ class DetailsCard extends StatelessWidget {
                     if (mediaDetails.trailerUrl.isNotEmpty) ...[
                       InkWell(
                         onTap: () async {
-                          final url = Uri.parse(mediaDetails.trailerUrl);
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url);
-                          }
+                          // final url = Uri.parse(mediaDetails.trailerUrl);
+                          // if (await canLaunchUrl(url)) {
+                          //   await launchUrl(url);
+                          // }
+
                         },
                         child: Container(
                           height: AppSize.s40,

@@ -30,12 +30,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: const FirebaseOptions(
-        appId: "1:1019741035758:android:238cea16b600e3e7f367ff",
-        messagingSenderId: "1019741035758	",
-        projectId: "matrimonynotifications",
-        apiKey: "AIzaSyB8IcTgDxSVHhcvcn2xlgYujiSxcEZ4130",
+        appId: "1:927744815392:android:0cf296a46463896bbd2745",
+        messagingSenderId: "927744815392",
+        projectId: "notiofication-app-8b069",
+        apiKey: "AIzaSyCea2Qvg5YQ7YHje18qtwHFXpvQcsjt7f",
       ));
-
   await FirebaseApi().initNotification();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
