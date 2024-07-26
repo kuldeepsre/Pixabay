@@ -19,24 +19,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common_button/LocalizationKeys.dart';
 import 'injectable.dart';
 import 'package:http/http.dart' as http;
-import '../AppLocalizations.dart';
-import '../bloc/them/ThemeCubit.dart';
+
 import 'notification/firebaseApi.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   configureDependencies();
 
-  // Initialize your dependency injection
   WidgetsFlutterBinding.ensureInitialized();
+ //  await Firebase.initializeApp();
   await Firebase.initializeApp(
+       name:"fdffffg App" ,
       options: const FirebaseOptions(
         appId: "1:927744815392:android:0cf296a46463896bbd2745",
-        messagingSenderId: "927744815392",
+        messagingSenderId: "927744815392 ",
         projectId: "notiofication-app-8b069",
         apiKey: "AIzaSyCea2Qvg5YQ7YHje18qtwHFXpvQcsjt7f",
       ));
-  await FirebaseApi().initNotification();
-  WidgetsFlutterBinding.ensureInitialized();
+     await FirebaseApi().initNotification();
+
   runApp(MyApp());
 }
 
