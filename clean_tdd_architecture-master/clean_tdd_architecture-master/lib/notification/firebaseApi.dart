@@ -20,7 +20,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print("Title: ${message.notification?.title}");
   print("Body: ${message.notification?.body}");
@@ -47,6 +46,7 @@ class FirebaseApi {
 
   Future<void> _incrementBadgeCount() async {
     _notificationCount++;
+    print('Incrementing badge count to $_notificationCount');  // Debugging line
     FlutterAppBadger.updateBadgeCount(_notificationCount);
   }
 
@@ -99,6 +99,8 @@ class FirebaseApi {
         }
         FlutterAppBadger.removeBadge();
         _notificationCount = 0;
+        print('removeBadge badge count to $_notificationCount');  // Debugging line
+
       },
     );
 
