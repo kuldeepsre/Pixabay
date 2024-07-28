@@ -1,6 +1,7 @@
 import 'package:clean_tdd_architecture/Feature/presentation/pages/HomeBody.dart';
 import 'package:flutter/material.dart';
 import '../Feature/presentation/pages/LoginApp.dart';
+import '../Feature/presentation/pages/chat.dart';
 import '../Feature/presentation/pages/dashboard_page.dart';
 import '../Feature/presentation/pages/login_form.dart';
 import '../Feature/presentation/upi_payment.dart';
@@ -48,6 +49,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const MerchantApp());
         case RoutePaths.LoginApp:
         return MaterialPageRoute(builder: (_) =>  LoginPage());
+        case RoutePaths.ChatScreen:
+        return MaterialPageRoute(builder: (_) => ChatScreen());
       default:
         return _errorRoute();
     }
@@ -86,4 +89,5 @@ class RoutePaths {
   static const String RojarPayment = '/payment_page';
   static const String MerchantApp = '/phone_pay';
   static const String LoginApp = '/LoginApp';
+  static const String ChatScreen = '/ChatScreen';
 }

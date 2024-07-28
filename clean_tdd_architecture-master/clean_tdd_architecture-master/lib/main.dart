@@ -155,7 +155,8 @@ class _SplashScreenState extends State<SplashScreen> {
     //   Navigator.of(context).pushReplacementNamed('/LoginPage2');
     // Navigator.of(context).pushReplacementNamed('/payment_page');
    // Navigator.of(context).pushReplacementNamed('/homeBody');
-    Navigator.of(context).pushReplacementNamed('/LoginApp');
+   // Navigator.of(context).pushReplacementNamed('/LoginApp');
+    Navigator.of(context).pushReplacementNamed('/ChatScreen');
     //   Navigator.of(context).pushReplacementNamed('/taskScreen');
     //   Navigator.of(context).pushReplacementNamed('/daily_remainder');
   }
