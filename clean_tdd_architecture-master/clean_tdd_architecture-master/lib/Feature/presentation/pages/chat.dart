@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -8,23 +11,64 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final CollectionReference _messagesCollection =
-  FirebaseFirestore.instance.collection('messages');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<String?> _uploadFile(File file) async {
+    try {
+      final storageRef = _storage.ref().child('chat_attachments/${DateTime.now().toString()}');
+      final uploadTask = storageRef.putFile(file);
+
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("Error uploading file: $e");
+      return null;
+    }
+  }
+
+  Future<void> _pickAndUploadImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      final imageUrl = await _uploadFile(file);
+      _sendMessage(_controller.text, imageUrl);
+    }
+  }
+
+  Future<void> _sendMessage(String text, String? imageUrl) async {
+    if (text.isNotEmpty || imageUrl != null) {
+      await _firestore.collection('messages').add({
+        'text': text,
+        'imageUrl': imageUrl,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      _controller.clear();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group Chat'),
+        title: const Text('Chat'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.photo),
+            onPressed: _pickAndUploadImage,
+          ),
+        ],
       ),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _messagesCollection.orderBy('timestamp', descending: true).snapshots(),
+              stream: _firestore.collection('messages').orderBy('timestamp', descending: true).snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 final messages = snapshot.data!.docs;
                 return ListView.builder(
@@ -33,8 +77,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (context, index) {
                     final message = messages[index];
                     return ListTile(
-                      title: Text(message['text']),
-                      subtitle: Text(message['sender']),
+                      title: Text(message['text'] ?? ''),
+                      subtitle: message['imageUrl'] != null
+                          ? Image.network(message['imageUrl'])
+                          : null,
                     );
                   },
                 );
@@ -48,23 +94,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter a message',
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    if (_controller.text.isNotEmpty) {
-                      _messagesCollection.add({
-                        'text': _controller.text,
-                        'sender': 'Anonymous', // Or any other identifier
-                        'timestamp': FieldValue.serverTimestamp(),
-                      });
-                      _controller.clear();
-                    }
-                  },
+                  icon: const Icon(Icons.send),
+                  onPressed: () => _sendMessage(_controller.text, null),
                 ),
               ],
             ),
