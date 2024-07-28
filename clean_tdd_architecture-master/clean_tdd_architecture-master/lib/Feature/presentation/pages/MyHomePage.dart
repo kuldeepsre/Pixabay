@@ -1,16 +1,10 @@
 import 'package:clean_tdd_architecture/bloc/them/ThemeCubit.dart';
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../AppLocalizations.dart';
-
-
 import '../../../common_button/LocalizationKeys.dart';
 import 'HomeBody.dart';
-
 
 class MyHomePage extends StatelessWidget {
   @override

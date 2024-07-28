@@ -14,10 +14,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print("Title: ${message.notification?.title}");
   print("Body: ${message.notification?.body}");
-  print("paload: ${message.data}");
+  print("Payload: ${message.data}");
 }
 
 class FirebaseApi {
@@ -58,7 +65,7 @@ class FirebaseApi {
       final data = message.data;
       print("Title: ${notification?.title}");
       print("Body: ${notification?.body}");
-      print("paload: $data");
+      print("Payload: $data");
 
       final android = message.notification?.android;
       if (notification != null && android != null) {
