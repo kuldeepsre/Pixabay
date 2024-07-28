@@ -6,6 +6,14 @@ import '../Routes/route_generator.dart';
 import '../main.dart';
 
 
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print("Title: ${message.notification?.title}");
   print("Body: ${message.notification?.body}");
@@ -22,11 +30,17 @@ class FirebaseApi {
     playSound: true,
   );
   final localNotification = FlutterLocalNotificationsPlugin();
+  int _notificationCount = 0;
 
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
     navigatorKey.currentState?.pushNamed(RoutePaths.dashboard,
         arguments: message.notification);
+  }
+
+  Future<void> _incrementBadgeCount() async {
+    _notificationCount++;
+    FlutterAppBadger.updateBadgeCount(_notificationCount);
   }
 
   Future initPushNotification() async {
@@ -61,6 +75,7 @@ class FirebaseApi {
           ),
           payload: jsonEncode(message.toMap()),
         );
+        _incrementBadgeCount();
       }
     });
   }
@@ -75,6 +90,8 @@ class FirebaseApi {
           navigatorKey.currentState?.pushNamed(RoutePaths.dashboard,
               arguments: payload.toString());
         }
+        FlutterAppBadger.removeBadge();
+        _notificationCount = 0;
       },
     );
 
