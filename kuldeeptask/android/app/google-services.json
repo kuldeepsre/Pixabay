@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "887233064346",
+    "project_id": "demoapp-4768f",
+    "storage_bucket": "demoapp-4768f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887233064346:android:af2fedb571943b97719e23",
+        "android_client_info": {
+          "package_name": "com.example.kuldeeptask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxyojZ3040CkSvp0s5k8skmR1mXz-pLvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

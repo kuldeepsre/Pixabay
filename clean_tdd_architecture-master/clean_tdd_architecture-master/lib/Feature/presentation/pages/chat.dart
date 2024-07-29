@@ -14,6 +14,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
+  final String chatId = 'chat1'; // Example chatId
+  final String userId = 'user1'; // Example userId
 
   Future<String?> _uploadFile(File file) async {
     try {
@@ -40,23 +42,61 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _sendMessage(String text, String? imageUrl) async {
     if (text.isNotEmpty || imageUrl != null) {
-      await _firestore.collection('messages').add({
+      final messageRef = _firestore.collection('messages').doc();
+      await messageRef.set({
         'text': text,
         'imageUrl': imageUrl,
+        'senderId': userId,
         'timestamp': FieldValue.serverTimestamp(),
+        'chatId': chatId,
+        'read': false,
       });
+
+      // Update chat metadata
+      await _firestore.collection('chats').doc(chatId).set({
+        'lastMessage': text,
+        'timestamp': FieldValue.serverTimestamp(),
+        'unreadCount': FieldValue.increment(1),
+      }, SetOptions(merge: true));
+
       _controller.clear();
     }
+  }
+
+  Future<void> _markMessagesAsRead() async {
+    final messagesQuery = _firestore.collection('messages')
+        .where('chatId', isEqualTo: chatId)
+        .where('read', isEqualTo: false);
+    final messagesSnapshot = await messagesQuery.get();
+
+    for (var doc in messagesSnapshot.docs) {
+      await doc.reference.update({'read': true});
+    }
+
+    // Reset unread count in chat metadata
+    await _firestore.collection('chats').doc(chatId).update({
+      'unreadCount': 0,
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: _firestore.collection('chats').doc(chatId).snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Text('Chat');
+            }
+            final chatData = snapshot.data!;
+            final unreadCount = chatData['unreadCount'] ?? 0;
+            return Text('Chat (${unreadCount})');
+          },
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.photo),
+            icon: Icon(Icons.photo),
             onPressed: _pickAndUploadImage,
           ),
         ],
@@ -65,10 +105,13 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('messages').orderBy('timestamp', descending: true).snapshots(),
+              stream: _firestore.collection('messages')
+                  .where('chatId', isEqualTo: chatId)
+                  .orderBy('timestamp', descending: true)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(child: CircularProgressIndicator());
                 }
                 final messages = snapshot.data!.docs;
                 return ListView.builder(
@@ -76,10 +119,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
+                    final text = message['text'] ?? '';
+                    final imageUrl = message['imageUrl'] as String?;
+
                     return ListTile(
-                      title: Text(message['text'] ?? ''),
-                      subtitle: message['imageUrl'] != null
-                          ? Image.network(message['imageUrl'])
+                      title: Text(text),
+                      subtitle: imageUrl != null
+                          ? Image.network(imageUrl)
                           : null,
                     );
                   },
@@ -94,19 +140,26 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Enter a message',
                     ),
+                    onSubmitted: (value) {
+                      _sendMessage(value, null);
+                    },
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send),
+                  icon: Icon(Icons.send),
                   onPressed: () => _sendMessage(_controller.text, null),
                 ),
               ],
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.mark_chat_read),
+        onPressed: _markMessagesAsRead,
       ),
     );
   }
