@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:clean_tdd_architecture/Feature/presentation/bloc/deshboard/dashboard_bloc.dart';
 import 'package:clean_tdd_architecture/Feature/presentation/bloc/signup/signup_bloc.dart';
+import 'package:clean_tdd_architecture/bloc/multi_api/MultiApiBloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,8 @@ import 'Feature/domain/controller/login_controller.dart';
 import 'Feature/domain/controller/signup_controller.dart';
 import 'Feature/presentation/bloc/login/login_bloc.dart';
 import 'Routes/route_generator.dart';
+import 'UserRepository.dart';
+import 'UserRepositoryImpl.dart';
 import 'bloc/them/ThemeCubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common_button/LocalizationKeys.dart';
@@ -43,6 +46,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Repository repository = RepositoryImpl();
     return MultiProvider(
       providers: [
         BlocProvider<LoginBloc>(
@@ -56,6 +60,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ThemeCubit>(create: (context) => ThemeCubit()),
         BlocProvider<LanguageCubit>(create: (context) => LanguageCubit()),
+        BlocProvider<MultiApiBloc>(create: (context) => MultiApiBloc(repository)),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (themeContext, themeState) {
@@ -156,7 +161,8 @@ class _SplashScreenState extends State<SplashScreen> {
     // Navigator.of(context).pushReplacementNamed('/payment_page');
    // Navigator.of(context).pushReplacementNamed('/homeBody');
    // Navigator.of(context).pushReplacementNamed('/LoginApp');
-    Navigator.of(context).pushReplacementNamed('/ChatScreen');
+    //Navigator.of(context).pushReplacementNamed('/UserScreen');
+      Navigator.of(context).pushReplacementNamed('/MultiApiScreen');
     //   Navigator.of(context).pushReplacementNamed('/taskScreen');
     //   Navigator.of(context).pushReplacementNamed('/daily_remainder');
   }

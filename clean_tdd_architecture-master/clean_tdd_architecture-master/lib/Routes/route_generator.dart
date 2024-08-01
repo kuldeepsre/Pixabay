@@ -1,10 +1,12 @@
 import 'package:clean_tdd_architecture/Feature/presentation/pages/HomeBody.dart';
+import 'package:clean_tdd_architecture/user_screen.dart';
 import 'package:flutter/material.dart';
 import '../Feature/presentation/pages/LoginApp.dart';
 import '../Feature/presentation/pages/chat.dart';
 import '../Feature/presentation/pages/dashboard_page.dart';
 import '../Feature/presentation/pages/login_form.dart';
 import '../Feature/presentation/upi_payment.dart';
+import '../MultiApiScreen.dart';
 import '../main.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -18,6 +20,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) =>  DashboardPage());
         case RoutePaths.HomeBody:
         return MaterialPageRoute(builder: (_) =>  HomeBody());
+        case RoutePaths.UserScreen:
+        return MaterialPageRoute(builder: (_) =>  UserScreen());
+        case RoutePaths.MultiApiScreen:
+        return MaterialPageRoute(builder: (_) =>  MultiApiScreen());
       // case RoutePaths.categoryPage:
       //   return MaterialPageRoute(
       //       builder: (_) => CategoryPage(
@@ -90,4 +96,6 @@ class RoutePaths {
   static const String MerchantApp = '/phone_pay';
   static const String LoginApp = '/LoginApp';
   static const String ChatScreen = '/ChatScreen';
+  static const String UserScreen = '/UserScreen';
+  static const String MultiApiScreen = '/MultiApiScreen';
 }
