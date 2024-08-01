@@ -1,54 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'UserRepository.dart';
 import 'UserRepositoryImpl.dart';
+import 'bloc/multi_api/MultiApiBloc.dart';
+import 'bloc/multi_api/MultiApiEvent.dart';
+import 'bloc/multi_api/MultiApiState.dart';
 import 'model/user.dart';
-
-class UserScreen extends StatefulWidget {
-  @override
-  _UserScreenState createState() => _UserScreenState();
-}
-
-class _UserScreenState extends State<UserScreen> {
-  late Repository _userRepository;
-  late Future<User> _userFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _userRepository = RepositoryImpl();
-    _userFuture = _userRepository.getUser(1); // Fetch user with ID 1
-  }
-
+class UserPostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('User Details')),
-      body: FutureBuilder<User>(
-        future: _userFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final user = snapshot.data!;
-            return Center(
+      appBar: AppBar(title: Text('Users and Posts')),
+      body: BlocConsumer<UserPostBloc, UserPostState>(
+        listener: (context, state) {
+          if (state is UserPostError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${state.message}')),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is UserPostLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is UserPostLoaded) {
+            return SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('ID: ${user.id}'),
-                  Text('Name: ${user.name}'),
-                  Text('Email: ${user.email}'),
+                  Text('Users', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.users.length,
+                    itemBuilder: (context, index) {
+                      final user = state.users[index];
+                      return ListTile(
+                        title: Text(user.name),
+                        subtitle: Text(user.email),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Text('Posts', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.posts.length,
+                    itemBuilder: (context, index) {
+                      final post = state.posts[index];
+                      return ListTile(
+                        title: Text(post.title),
+                        subtitle: Text(post.body),
+                      );
+                    },
+                  ),
                 ],
               ),
             );
           } else {
-            return const Center(child: Text('No data found'));
+            return Center(child: Text('Press the button to load data'));
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.read<UserPostBloc>().add(FetchUserAndPosts());
+        },
+        child: Icon(Icons.refresh),
       ),
     );
   }
 }
-

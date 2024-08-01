@@ -6,7 +6,7 @@ import '../Feature/presentation/pages/chat.dart';
 import '../Feature/presentation/pages/dashboard_page.dart';
 import '../Feature/presentation/pages/login_form.dart';
 import '../Feature/presentation/upi_payment.dart';
-import '../MultiApiScreen.dart';
+
 import '../main.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -21,9 +21,9 @@ class RouteGenerator {
         case RoutePaths.HomeBody:
         return MaterialPageRoute(builder: (_) =>  HomeBody());
         case RoutePaths.UserScreen:
-        return MaterialPageRoute(builder: (_) =>  UserScreen());
-        case RoutePaths.MultiApiScreen:
-        return MaterialPageRoute(builder: (_) =>  MultiApiScreen());
+        return MaterialPageRoute(builder: (_) =>  UserPostScreen());
+/*        case RoutePaths.MultiApiScreen:
+        return MaterialPageRoute(builder: (_) =>  MultiApiScreen());*/
       // case RoutePaths.categoryPage:
       //   return MaterialPageRoute(
       //       builder: (_) => CategoryPage(
