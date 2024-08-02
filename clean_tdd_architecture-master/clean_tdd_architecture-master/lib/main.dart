@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:clean_tdd_architecture/CounterPage.dart';
 import 'package:clean_tdd_architecture/Feature/presentation/bloc/deshboard/dashboard_bloc.dart';
 import 'package:clean_tdd_architecture/Feature/presentation/bloc/signup/signup_bloc.dart';
 import 'package:clean_tdd_architecture/bloc/multi_api/MultiApiBloc.dart';
@@ -18,6 +19,7 @@ import 'Routes/route_generator.dart';
 import 'UserRepository.dart';
 import 'UserRepositoryImpl.dart';
 import 'api_services.dart';
+import 'bloc/CounterState.dart';
 import 'bloc/pagination/pagination_bloc.dart';
 import 'bloc/them/ThemeCubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -63,6 +65,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ThemeCubit>(create: (context) => ThemeCubit()),
         BlocProvider<LanguageCubit>(create: (context) => LanguageCubit()),
+        BlocProvider<CounterCubit>(create: (context) => CounterCubit()),
         BlocProvider<PaginationBloc>(create: (context) => PaginationBloc(ApiService())),
         BlocProvider<UserPostBloc>(create: (context) => UserPostBloc(repository)),
       ],
@@ -166,10 +169,15 @@ class _SplashScreenState extends State<SplashScreen> {
    // Navigator.of(context).pushReplacementNamed('/homeBody');
    // Navigator.of(context).pushReplacementNamed('/LoginApp');
   //Navigator.of(context).pushReplacementNamed('/UserScreen');
-  Navigator.of(context).pushReplacementNamed('/PaginationPage');
+//  Navigator.of(context).pushReplacementNamed('/PaginationPage');
 //    Navigator.of(context).pushReplacementNamed('/MultiApiScreen');
     //   Navigator.of(context).pushReplacementNamed('/taskScreen');
     //   Navigator.of(context).pushReplacementNamed('/daily_remainder');
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  CounterPage()),
+    );
   }
 
   @override

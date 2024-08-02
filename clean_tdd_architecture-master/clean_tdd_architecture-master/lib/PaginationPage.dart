@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'bloc/pagination/pagination_bloc.dart';
-
-
 class PaginationPage extends StatefulWidget {
   @override
   _PaginationPageState createState() => _PaginationPageState();
 }
-
 class _PaginationPageState extends State<PaginationPage> {
   final ScrollController _scrollController = ScrollController();
 
