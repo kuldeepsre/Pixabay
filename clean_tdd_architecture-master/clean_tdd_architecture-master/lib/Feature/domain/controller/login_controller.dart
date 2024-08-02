@@ -47,12 +47,11 @@ class LoginController implements ILoginController {
       },
       body: jsonEncode(body),
     );
-     var jsonresult = json.decode(response.body);
+      var jsonresult = json.decode(response.body);
 
 
       if (response.statusCode == 200) {
       var jsonresult = json.decode(response.body);
-
       return jsonresult;
     } else {
       print('Login failed: ${response.statusCode}');

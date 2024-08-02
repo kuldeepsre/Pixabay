@@ -72,16 +72,12 @@ class LoginForm extends StatelessWidget {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          // Dispatch the login event when the button is pressed
-                          //context.read<LoginBloc>().add(LoginFetchEvent());
+
                           Map<String, String> data = {
                             "username": "kk",
                             "password": "admin"
                           };
-
-                          context
-                              .read<LoginBloc>()
-                              .add(LoginPostEvent(body: data));
+                          context.read<LoginBloc>().add(LoginPostEvent(body: data));
                         },
                         child: const Text('Login'),
                       ),

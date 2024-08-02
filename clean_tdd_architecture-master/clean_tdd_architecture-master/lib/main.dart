@@ -17,6 +17,8 @@ import 'Feature/presentation/bloc/login/login_bloc.dart';
 import 'Routes/route_generator.dart';
 import 'UserRepository.dart';
 import 'UserRepositoryImpl.dart';
+import 'api_services.dart';
+import 'bloc/pagination/pagination_bloc.dart';
 import 'bloc/them/ThemeCubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common_button/LocalizationKeys.dart';
@@ -29,7 +31,7 @@ Future<void> main() async {
   configureDependencies();
 
   WidgetsFlutterBinding.ensureInitialized();
- //  await Firebase.initializeApp();
+
   await Firebase.initializeApp(
        name:"fdffffg App" ,
       options: const FirebaseOptions(
@@ -44,6 +46,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final Repository repository = RepositoryImpl();
   @override
   Widget build(BuildContext context) {
     final Repository repository = RepositoryImpl();
@@ -60,7 +63,8 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ThemeCubit>(create: (context) => ThemeCubit()),
         BlocProvider<LanguageCubit>(create: (context) => LanguageCubit()),
-        BlocProvider<MultiApiBloc>(create: (context) => MultiApiBloc(repository)),
+        BlocProvider<PaginationBloc>(create: (context) => PaginationBloc(ApiService())),
+        BlocProvider<UserPostBloc>(create: (context) => UserPostBloc(repository)),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (themeContext, themeState) {
@@ -161,8 +165,9 @@ class _SplashScreenState extends State<SplashScreen> {
     // Navigator.of(context).pushReplacementNamed('/payment_page');
    // Navigator.of(context).pushReplacementNamed('/homeBody');
    // Navigator.of(context).pushReplacementNamed('/LoginApp');
-    //Navigator.of(context).pushReplacementNamed('/UserScreen');
-      Navigator.of(context).pushReplacementNamed('/MultiApiScreen');
+  //Navigator.of(context).pushReplacementNamed('/UserScreen');
+  Navigator.of(context).pushReplacementNamed('/PaginationPage');
+//    Navigator.of(context).pushReplacementNamed('/MultiApiScreen');
     //   Navigator.of(context).pushReplacementNamed('/taskScreen');
     //   Navigator.of(context).pushReplacementNamed('/daily_remainder');
   }

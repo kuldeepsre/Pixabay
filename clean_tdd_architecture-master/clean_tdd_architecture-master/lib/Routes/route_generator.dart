@@ -1,4 +1,5 @@
 import 'package:clean_tdd_architecture/Feature/presentation/pages/HomeBody.dart';
+import 'package:clean_tdd_architecture/PaginationPage.dart';
 import 'package:clean_tdd_architecture/user_screen.dart';
 import 'package:flutter/material.dart';
 import '../Feature/presentation/pages/LoginApp.dart';
@@ -22,6 +23,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) =>  HomeBody());
         case RoutePaths.UserScreen:
         return MaterialPageRoute(builder: (_) =>  UserPostScreen());
+
+        case RoutePaths.PaginationPage:
+        return MaterialPageRoute(builder: (_) =>  PaginationPage());
 /*        case RoutePaths.MultiApiScreen:
         return MaterialPageRoute(builder: (_) =>  MultiApiScreen());*/
       // case RoutePaths.categoryPage:
@@ -98,4 +102,5 @@ class RoutePaths {
   static const String ChatScreen = '/ChatScreen';
   static const String UserScreen = '/UserScreen';
   static const String MultiApiScreen = '/MultiApiScreen';
+  static const String PaginationPage = '/PaginationPage';
 }
