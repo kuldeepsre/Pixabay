@@ -16,7 +16,6 @@ class UserPostBloc extends Bloc<UserPostEvent, UserPostState> {
     try {
       final usersFuture = repository.getUsers();
       final postsFuture = repository.getPosts();
-
       final users = await usersFuture;
       final posts = await postsFuture;
 
