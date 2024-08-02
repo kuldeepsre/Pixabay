@@ -15,3 +15,7 @@ class FetchData extends PaginationEvent {
   @override
   List<Object> get props => [page];
 }
+
+class FetchNextPage extends PaginationEvent {}
+
+class FetchPreviousPage extends PaginationEvent {}

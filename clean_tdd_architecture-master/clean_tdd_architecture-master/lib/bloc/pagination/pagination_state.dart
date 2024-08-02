@@ -1,6 +1,8 @@
 part of 'pagination_bloc.dart';
 
 // States
+
+// States
 abstract class PaginationState extends Equatable {
   const PaginationState();
 
